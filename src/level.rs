@@ -78,7 +78,7 @@ pub(crate) struct Level {
     display_data: DisplayData,
     bubble: Bubble,
     sense_mode: SenseResolution,
-    // flag_initialized: bool
+    upside_down: bool
 }
 
 impl Level {
@@ -91,11 +91,23 @@ impl Level {
             display_data,
             bubble,
             sense_mode: SenseResolution::Course,
+            upside_down: false,
         }
     }
 
+    // Note this is a development time diagnostic to observe row and column
+    // disply element values:
     pub(crate) fn bubble_x_y(&self) -> Bubble {
         self.bubble
+    }
+
+    pub(crate) fn note_upside_down(&mut self, z_accel: f32) -> bool {
+        if z_accel < 0.0 {
+            self.upside_down = true;
+        } else {
+            self.upside_down = false;
+        }
+        self.upside_down
     }
 
     pub(crate) fn current_render(

@@ -131,13 +131,21 @@ fn main() -> ! {
         let bp: ButtonPress = buttons::read_buttons(false);
         level.handle_buttons(bp);
 
+        // Provide latest acceleration data to the "level demo" crate of this app
+        // (1) Convey z-axis data to determine up/down orientation:
+        level.note_upside_down(zf);
+
+        // (2) Share calculated pitch and roll data to update graphical "bubble":
         let _image = level.pixel_on(
              1.0 * roll,
             -1.0 * pitch
         );
+
+        // Copy current graphic representation of bubble level:
         let image = level.current_render();
 
-        let _ = write!(serial, "pitch and roll: {} {}\n\r", pitch, roll);
+        // let _ = write!(serial, "pitch and roll: {} {}\n\r", pitch, roll);
+        let _ = write!(serial, "z-axis acc {}\n\r", zf);
         display.show(&mut timer, image, DISPLAY_HOLD_MS);
     }
 }
