@@ -133,10 +133,11 @@ fn main() -> ! {
 
         // Provide latest acceleration data to the "level demo" crate of this app
         // (1) Convey z-axis data to determine up/down orientation:
-        level.note_upside_down(zf);
+        level.note_upside_down(-1.0 * zf);
 
         // (2) Share calculated pitch and roll data to update graphical "bubble":
-        let _image = level.pixel_on(
+        // let _image = level.pixel_on(
+        let _image = level.update_display(
              1.0 * roll,
             -1.0 * pitch
         );

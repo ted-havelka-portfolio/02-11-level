@@ -154,6 +154,16 @@ impl Level {
         self.display_data.led_array
     }
 
+    // Wrapper to function to update display by clearing and turning on one LED:
+    pub(crate) fn update_display(&mut self, roll: f32, pitch: f32) -> [[u8; 5]; 5] {
+        if self.upside_down == false {
+            self.pixel_on(roll, pitch);
+        } else {
+            self.display_data.clear();
+        }
+        self.display_data.led_array
+    }
+
     fn handle_button_a(&mut self) {
         self.sense_mode = SenseResolution::Course;
     }
