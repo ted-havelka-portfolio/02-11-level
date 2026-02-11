@@ -23,9 +23,4 @@ features = ["inline-asm", "critical-section-single-core"]
 
 [dependencies.serial-setup]
 version = "0.1.0"
-path = "../serial-setup"
-
-# # https://crates.io/crates/num-integer
-# [dependencies.num-integer]
-# version = "0.1.36"
-# default-features = false
+path = "./serial-setup"
