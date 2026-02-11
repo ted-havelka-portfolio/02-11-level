@@ -6,6 +6,10 @@ const CENTER_ROW_OFFSET: i8 = 2;
 const CENTER_COL_OFFSET: i8 = 2;
 const BUBBLE_MAX_ROW: i8 = 4;
 const BUBBLE_MAX_COL: i8 = 4;
+// Provide scaling values to make display output more sensitive to board tilt:
+const LEVEL_SCALE_COURSE: f32 = 3.0;
+const LEVEL_SCALE_FINE: f32 = 30.0;
+
 // rustc --explain E0616
 mod bubble {
     #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
@@ -19,8 +23,6 @@ mod bubble {
         pub fn new() -> Bubble { Bubble { row: 0_i8, col: 0_i8 } }
     }
 }
-
-// Implement a data type for the life 5x5 "field"
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 struct DisplayData {
@@ -98,7 +100,7 @@ impl Level {
 
     pub(crate) fn sense_mode_c_f(&self) -> u8 {
         let mut mode: u8 = 0;
-        match self.sense_mode { 
+        match self.sense_mode {
             SenseResolution::Course => {mode = 1},
             SenseResolution::Fine => {mode = 2},
         }
@@ -111,19 +113,35 @@ impl Level {
         self.display_data.led_array
     }
 
-    pub(crate) fn pixel_on(&mut self, row: i8, col: i8) -> [[u8; 5]; 5] {
+    pub(crate) fn pixel_on(&mut self, roll: f32, pitch: f32) -> [[u8; 5]; 5] {
+        // Clear the grid-wise data rendered on Microbit LED display matrix
         self.display_data.clear();
-        let mut new_row = row + CENTER_ROW_OFFSET;
-        let mut new_col = col + CENTER_COL_OFFSET;
+
+        // Select scaling value to apply to x-axis and y-axis tilt readings
+        let mut scaling: f32 = LEVEL_SCALE_COURSE;
+        match self.sense_mode {
+            SenseResolution::Course => {scaling = LEVEL_SCALE_COURSE},
+            SenseResolution::Fine => {scaling = LEVEL_SCALE_FINE},
+        }
+
+        // Update the "bubble" represented by an LED with row and column attributes
+        let mut new_row = (roll * scaling) as i8;
+        let mut new_col = (pitch * scaling) as i8;
+
+        // Apply offsets which center the "bubble" when board is level
+        new_row += CENTER_ROW_OFFSET;
+        new_col += CENTER_COL_OFFSET;
+
+        // Clip tilt values to the edge of the LED display matrix
         match new_row {
             i8::MIN..=0 => new_row = 0,
             BUBBLE_MAX_ROW..=i8::MAX => new_row = BUBBLE_MAX_ROW,
-            _ => new_row = row + CENTER_ROW_OFFSET,
+            _ => { }
         }
         match new_col {
             i8::MIN..=0 => new_col = 0,
             BUBBLE_MAX_COL..=i8::MAX => new_col = BUBBLE_MAX_COL,
-            _ => new_col = col + CENTER_COL_OFFSET,
+            _ => { }
         }
         self.bubble.row = new_row;
         self.bubble.col = new_col;
@@ -144,7 +162,6 @@ impl Level {
         match binput {
             ButtonPress::ButtonA => { self.handle_button_A() },
             ButtonPress::ButtonB => { self.handle_button_B() },
-            // ButtonPress::None => { self.handle_buttons_released() }
             ButtonPress::None => { }
         }
     }
