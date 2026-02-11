@@ -1,0 +1,31 @@
+[package]
+name = "a4-level"
+version = "0.1.0"
+authors = ["Henrik Böving <hargonix@gmail.com>"]
+edition = "2021"
+
+[dependencies]
+cortex-m-rt = "0.7.5"
+embedded-io = "0.6.1"
+heapless = "0.8.0"
+microbit-v2 = "0.15.1"
+panic-rtt-target = "0.2.0"
+rtt-target = "0.6.1"
+embedded-hal = "1.0.0-rc1"
+lsm303agr = "1.1.0"
+
+[dependencies.micromath]
+version = "2.1.0"
+
+[dependencies.cortex-m]
+version = "0.7.7"
+features = ["inline-asm", "critical-section-single-core"]
+
+[dependencies.serial-setup]
+version = "0.1.0"
+path = "../serial-setup"
+
+# # https://crates.io/crates/num-integer
+# [dependencies.num-integer]
+# version = "0.1.36"
+# default-features = false
