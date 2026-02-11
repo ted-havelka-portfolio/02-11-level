@@ -8,9 +8,9 @@ accelerometer.
 ## Demo Specifications (what the app does)
 
 When a user holds the Microbit board with LED display facing up, a single LED
-alights to show how much the board is tilted in the X and Y axes. The scaling of
-LED change in the 5x5 array is that each LED away from center, along a row or a
-column represents 1/5g, or about 1.96m/s^2 acceleration.
+alights to show how much the board is tilted in the X and Y axes. The scaling is
+such that each LED away from the centermost one represents one fifth of the
+typical gravitational force at the surface of the earth.
 
 - When the board is upside down (display down) the display should be blanked.
 
@@ -28,6 +28,10 @@ column represents 1/5g, or about 1.96m/s^2 acceleration.
 
 - Acceleration measurement and display should refresh every 200 ms (5 frames per
   second).
+
+Note that the course acceleration LED step-wise movement assures that the
+lighted LED will "hit" the edge of the display before the board is brought to
+vertical in both X and Y axes.
 
 ## How The Demo Is Built
 
@@ -61,7 +65,7 @@ One way the level demo app might be developed for more practical use is to
 augment its display support abilities. The Microbit LED display is quite small
 and quick to update. Other displays could be used to provide a more accurate and
 visually engaging level interface. It would make sense to factor display support
-into crate or module of its own, and have those details taken out or never put
+into a crate or module of its own, and have those details taken out or never put
 into `main.rs`.
 
 With larger displays the app would likely also benefit if not require
@@ -74,17 +78,19 @@ task were performed in a blocking fashion.
 
 With respect to previous work new features in this demo include use of I2C and
 Microbit's accelerometer, the LSM303AGR. Also new in this work is use of
-`micromath 1.0.0` for floating point math.
+[`micromath 1.0.0`](https://crates.io/crates/micromath) for floating point math.
 
 Some early exploration was made into the use of integer math. The Rust crate
-`num-integer` provides such a library. It's documentation says it can be
-compiled with `no_std` called out. For the "level" application, however,
-building this crate without Rust standard proved to be not readily possible.
+[`num-integer`](https://crates.io/crates/num-integer) provides such a library.
+It's documentation says it can be compiled with `no_std` called out. For the
+"level" application, however, building this crate without Rust standard proved
+to be not readily possible.
 
 I2C implementation was straightfoward, and based on example code from the Rust
-Embedded Discovery Book v2, chapter
-12.https://docs.rust-embedded.org/discovery-mb2/12-i2c/index.html. The button
-managing code was brought over from Game of Life with very few changes.
+Embedded
+[Discovery Book v2, chapter 12](https://docs.rust-embedded.org/discovery-mb2/12-i2c/index.html).
+The button managing code was brought over from Game of Life with very few
+changes.
 
 The floating point crate inclusion was the most challenging part of level demo
 development. Crate `libm` did not work for dependency issues. A second crate
@@ -128,6 +134,7 @@ As second point of interest, early level development work involved a search for
 integer arithmetic libraries compatible with Rust "no_std". While this didn't
 pan out contributor Ted did find an interesting chapter on integer division at
 [Algorithmica](https://en.algorithmica.org/hpc/arithmetic/division/). This
-seeming book section mentions [Henry Warren's book "Hacker's Delight"](<>). It
-sounds like this book would have some useful programming techniques to apply in
-embedded applications and memory constrained systems.
+seeming book section mentions
+[Henry Warren's book "Hacker's Delight"](https://en.wikipedia.org/wiki/Hacker%27s_Delight).
+It sounds like this book would have some useful programming techniques to apply
+in embedded applications and memory constrained systems.
