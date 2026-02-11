@@ -18,10 +18,10 @@ mod bubble {
         pub col: i8,
     }
 
-    impl Bubble 
-    {
-        pub fn new() -> Bubble { Bubble { row: 0_i8, col: 0_i8 } }
-    }
+//    impl Bubble 
+//    {
+//        pub fn new() -> Bubble { Bubble { row: 0_i8, col: 0_i8 } }
+//    }
 }
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
@@ -98,15 +98,6 @@ impl Level {
         self.bubble
     }
 
-    pub(crate) fn sense_mode_c_f(&self) -> u8 {
-        let mut mode: u8 = 0;
-        match self.sense_mode {
-            SenseResolution::Course => {mode = 1},
-            SenseResolution::Fine => {mode = 2},
-        }
-        mode
-    }
-
     pub(crate) fn current_render(
         &self,
     ) -> [[u8; 5]; 5] {
@@ -118,7 +109,8 @@ impl Level {
         self.display_data.clear();
 
         // Select scaling value to apply to x-axis and y-axis tilt readings
-        let mut scaling: f32 = LEVEL_SCALE_COURSE;
+        // let mut scaling: f32 = LEVEL_SCALE_COURSE;
+        let scaling: f32;
         match self.sense_mode {
             SenseResolution::Course => {scaling = LEVEL_SCALE_COURSE},
             SenseResolution::Fine => {scaling = LEVEL_SCALE_FINE},
@@ -150,18 +142,18 @@ impl Level {
         self.display_data.led_array
     }
 
-    fn handle_button_A(&mut self) {
+    fn handle_button_a(&mut self) {
         self.sense_mode = SenseResolution::Course;
     }
 
-    fn handle_button_B(&mut self) {
+    fn handle_button_b(&mut self) {
         self.sense_mode = SenseResolution::Fine;
     }
 
     pub(crate) fn handle_buttons(&mut self, binput: ButtonPress) {
         match binput {
-            ButtonPress::ButtonA => { self.handle_button_A() },
-            ButtonPress::ButtonB => { self.handle_button_B() },
+            ButtonPress::ButtonA => { self.handle_button_a() },
+            ButtonPress::ButtonB => { self.handle_button_b() },
             ButtonPress::None => { }
         }
     }

@@ -128,7 +128,7 @@ fn main() -> ! {
         // DEV END ------------------------------------------------------------
 
         use crate::level::ButtonPress;
-        let mut bp: ButtonPress = buttons::read_buttons(false);
+        let bp: ButtonPress = buttons::read_buttons(false);
         level.handle_buttons(bp);
 
         let _image = level.pixel_on(
