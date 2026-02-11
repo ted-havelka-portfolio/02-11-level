@@ -12,7 +12,7 @@ alights to show how much the board is tilted in the X and Y axes. The scaling is
 such that each LED away from the centermost one represents one fifth of the
 typical gravitational force at the surface of the earth.
 
-- When the board is upside down (display down) the display should be blanked.
+- When the board is upside down (display down) all LEDs should be off.
 
 - When the LED position is calculated "off any edge" of the display, the
   calculated lights LED should be clamped to that axis.
@@ -31,7 +31,8 @@ typical gravitational force at the surface of the earth.
 
 Note that the course acceleration LED step-wise movement assures that the
 lighted LED will "hit" the edge of the display before the board is brought to
-vertical in both X and Y axes.
+vertical in both X and Y axes.  The "fine" acceleration measurement mode assures
+this even moreso.
 
 ## How The Demo Is Built
 
