@@ -12,21 +12,21 @@ alights to show how much the board is tilted in the X and Y axes. The scaling of
 LED change in the 5x5 array is that each LED away from center, along a row or a
 column represents 1/5g, or about 1.96m/s^2 acceleration.
 
-- When the board is upside down (display down) display is blanked.
+- When the board is upside down (display down) the display should be blanked.
 
-- When the LED position is calculated "off any edge" of the display, clamp it to
-  that axis.
+- When the LED position is calculated "off any edge" of the display, the
+  calculated lights LED should be clamped to that axis.
 
 - Qualitatively the LED should move on the display as though it was a bubble in
   a hemispherical water-filled glass bulb.
 
-- To press the B button puts the level in "fine", higher sensitivity mode; the
-  LED scales from -50 to 50 mG.
+- To press the B button should put the level in "fine", higher sensitivity mode;
+  the LED scales from -50 to 50 mG.
 
-- To press the A button (by itself) returns the demo app to "coarse" reading and
-  display mode.
+- To press the A button (by itself) should return the demo app to "coarse"
+  reading and display mode.
 
-- Acceleration measurement and display refresh every 200 ms (5 frames per
+- Acceleration measurement and display should refresh every 200 ms (5 frames per
   second).
 
 ## How The Demo Is Built
@@ -44,13 +44,31 @@ The level application draws heavily on the earlier 2026 Q1 Game of Life
 application. Source file `main.rs` implements a loop which orchestrates all the
 more specific, sometimes lower level tasks. There is a module to manage button
 presses. There is a module to implement most of the variables, data structures
-and detailed logic of the demo, but not all! The primary loop in `main.rs` is
-mostly reponsible for gathering sensor and other input device data. Logic in the
-`level.rs` file decides how to process this data and further actions to take
-based on certin input data and events.
+and detailed logic of the demo, but not all.
 
-The not perfectly clear delineation of responsiblities between `main.rs` and
-`level.rs` is an area contributor Ted would like to improve.
+There seems to be some mixing of responsiblities between `main.rs` and
+`level.rs`. The main loop is definitely more of an orchestrator of application
+behavior. The main level module with the loop determines all the key timings,
+namely measurement and display refresh rates. But there is a tight coupling of
+display details between `main.rs` and `level.rs`.
+
+This kind of messy coupling is acceptable for a demo, but would not scale well
+to any kind of a larger application.
+
+## How "Level" Might Be Structured Were It A Larger App
+
+One way the level demo app might be developed for more practical use is to
+augment its display support abilities. The Microbit LED display is quite small
+and quick to update. Other displays could be used to provide a more accurate and
+visually engaging level interface. It would make sense to factor display support
+into crate or module of its own, and have those details taken out or never put
+into `main.rs`.
+
+With larger displays the app would likely also benefit if not require
+scheduling, so that displays could be updated while still allowing more frequent
+measurements and user input (button event) checking to take place. This so
+because a larger display could take a noticeably long time to update if that
+task were performed in a blocking fashion.
 
 ## Development
 
@@ -62,8 +80,6 @@ Some early exploration was made into the use of integer math. The Rust crate
 `num-integer` provides such a library. It's documentation says it can be
 compiled with `no_std` called out. For the "level" application, however,
 building this crate without Rust standard proved to be not readily possible.
-Division operations which this app uses are not trivial to implement, so use of
-this library was abandoned.
 
 I2C implementation was straightfoward, and based on example code from the Rust
 Embedded Discovery Book v2, chapter
@@ -105,12 +121,11 @@ but it is called with only the second and successive parameters:
 ```
 
 This appears to be a common occurance in Rust, in which function signatures
-contain a leading parameter which is not expressed by calling code. This is a
-point worth searching to better understand the mechanism at play, and why such
-syntax is chosen and makes sense.
+contain a leading parameter which is not expressed by calling code. The question
+arises "what's going here?".
 
-Early in the development of the level demonstration some time was spent
-researching integer arithmetic libraries for Rust "no_std". While this didn't
+As second point of interest, early level development work involved a search for
+integer arithmetic libraries compatible with Rust "no_std". While this didn't
 pan out contributor Ted did find an interesting chapter on integer division at
 [Algorithmica](https://en.algorithmica.org/hpc/arithmetic/division/). This
 seeming book section mentions [Henry Warren's book "Hacker's Delight"](<>). It
