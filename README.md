@@ -25,21 +25,21 @@ $ 3-run-main-rs.sh
 When a user holds the Microbit board with LED display facing up, a single LED
 alights to show how much the board is tilted in the X and Y axes. The scaling is
 such that each LED away from the centermost one represents one fifth of the
-typical gravitational force at the surface of the earth.
+typical gravitational force at the surface of the earth, 'G'.
 
 - When the board is upside down (display down) all LEDs should be off.
 
 - When the LED position is calculated "off any edge" of the display, the
-  calculated lights LED should be clamped to that axis.
+  lighted LED should be clamped to the given edge(s) of the display.
 
 - Qualitatively the LED should move on the display as though it was a bubble in
-  a hemispherical water-filled glass bulb.
+  a gently domed, water-filled glass bulb.
 
 - To press the B button should put the level in "fine", higher sensitivity mode;
-  the LED scales from -50 to 50 mG.
+  the range of five LEDs left to right, and top to botton each represent -50 to 50 mG.
 
 - To press the A button (by itself) should return the demo app to "coarse"
-  reading and display mode.
+  reading and display mode: the LEDs show the measured force of G ranging from -500mG to 500 mG.
 
 - Acceleration measurement and display should refresh every 200 ms (5 frames per
   second).
