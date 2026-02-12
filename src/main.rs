@@ -145,8 +145,6 @@ fn main() -> ! {
         // Copy current graphic representation of bubble level:
         let image = level.current_render();
 
-        // let _ = write!(serial, "pitch and roll: {} {}\n\r", pitch, roll);
-        let _ = write!(serial, "z-axis acc {}\n\r", zf);
         display.show(&mut timer, image, DISPLAY_HOLD_MS);
     }
 }

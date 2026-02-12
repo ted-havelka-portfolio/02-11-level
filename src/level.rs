@@ -6,9 +6,10 @@ const CENTER_ROW_OFFSET: i8 = 2;
 const CENTER_COL_OFFSET: i8 = 2;
 const BUBBLE_MAX_ROW: i8 = 4;
 const BUBBLE_MAX_COL: i8 = 4;
-// Provide scaling values to make display output more sensitive to board tilt:
-const LEVEL_SCALE_COURSE: f32 = 3.0;
-const LEVEL_SCALE_FINE: f32 = 30.0;
+// Provide scaling values to make display output provide -500 mG to 500 mG
+// reading range, and alternately -50 mG to 50 mG range:
+const LEVEL_SCALE_COURSE: f32 = 6.0;
+const LEVEL_SCALE_FINE: f32 = 60.0;
 
 // rustc --explain E0616
 mod bubble {
@@ -17,11 +18,6 @@ mod bubble {
         pub row: i8,
         pub col: i8,
     }
-
-//    impl Bubble 
-//    {
-//        pub fn new() -> Bubble { Bubble { row: 0_i8, col: 0_i8 } }
-//    }
 }
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
@@ -179,5 +175,4 @@ impl Level {
             ButtonPress::None => { }
         }
     }
-
 }
