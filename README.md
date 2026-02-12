@@ -5,6 +5,21 @@ accelerometer.
 
 **Implementor: Theodore Havelka**
 
+## Build and Run
+
+With a current Rust compiler and toolchain installed, build and run this demo
+application with:
+
+```shell
+$ RUSTFLAGS="-C link-arg=-Tlink.x" cargo run
+```
+
+There is a convenience shell script in this demo's repo to do the same:
+
+```shell
+$ 3-run-main-rs.sh
+```
+
 ## Demo Specifications (what the app does)
 
 When a user holds the Microbit board with LED display facing up, a single LED
